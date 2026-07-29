@@ -82,11 +82,4 @@ All analyses use seed `0`. The RD analysis uses the legacy
 Each placebo design restarts that same stream.
 
 ## Data and licensing
-
-Third-party data are not committed. See `data/README.md` for provenance
-and the expected local paths. Add the intended software license before
-publishing the repository.
-
-## Citation
-
-See `CITATION.cff`.
+See `data/README.md` for provenance and the expected local paths.
