@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cp-lfdr"
+version = "0.1.0"
+description = "Density-compound p-value simulations and applications"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+  {name = "Jierui Zhu"},
+  {name = "Rina Foygel Barber"},
+  {name = "Nikolaos Ignatiadis"},
+]
+dependencies = [
+  "matplotlib>=3.8",
+  "numba>=0.59",
+  "numpy>=1.26",
+  "pandas>=2.0",
+  "scipy>=1.11",
+]
+
+[project.optional-dependencies]
+notebooks = [
+  "ipykernel>=6.0",
+  "jupyterlab>=4.0",
+  "rdrobust>=1.3",
+  "seaborn>=0.13",
+]
+dev = [
+  "nbclient>=0.10",
+  "nbformat>=5.10",
+  "pytest>=8.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+pythonpath = ["src"]
+testpaths = ["tests"]

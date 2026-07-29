@@ -1,0 +1,36 @@
+.DS_Store
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Local and third-party data
+data/processed/*
+!data/processed/.gitkeep
+data/raw/*
+!data/raw/rd/
+data/raw/rd/*
+!data/raw/rd/.gitkeep
+*.dta
+*.npz
+
+# Generated results
+results/*
+!results/README.md
+!results/figures/
+results/figures/*
+!results/figures/.gitkeep
+
+# LaTeX build products
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
