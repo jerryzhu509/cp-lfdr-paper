@@ -11,6 +11,8 @@ regression-discontinuity analysis.
 - `notebooks/02_gene_expression.ipynb`: GSE9101 application.
 - `notebooks/03_regression_discontinuity.ipynb`: Romanian admissions
   RD application.
+- `notebooks/03_regression_discontinuity_placebo.ipynb`: midpoint-placebo
+  falsification analysis for the RD application.
 - `src/cp_lfdr/`: shared, tested implementations.
 - `tests/`: unit and regression tests.
 - `data/README.md`: data provenance and local setup.
@@ -19,7 +21,7 @@ regression-discontinuity analysis.
 ## Running the analyses
 
 After placing the data as described in `data/README.md`, open any of the
-three notebooks in Jupyter and choose **Run All Cells**. Each notebook
+four notebooks in Jupyter and choose **Run All Cells**. Each notebook
 finds the local `src/cp_lfdr` package automatically, can be run
 independently, and writes its own outputs under `results/`.
 
@@ -28,11 +30,11 @@ The first code cell in each notebook contains all editable run settings:
 | Setting | Notebook | Purpose |
 | --- | --- | --- |
 | `RUN_FULL` | Continuous | `True` runs 10,000 draws per setting; `False` runs the 100-draw preview. |
-| `RUN_PLACEBOS` | RD | Controls the four placebo analyses. |
 | `SAVE_FIGURES` | All | Saves PDF and 300-dpi PNG figures when `True`. |
 | `SAVE_TEX` | All | Also saves PGF-backed `.tex` figures when `True`. |
 | `SAVE_RESULTS` | Continuous | Saves the simulation pickle and summary CSV. |
 | `DATA_DIR` | Gene/RD | Can be edited if data are stored elsewhere. |
+| `BANDWIDTHS` | RD placebo | Selects the midpoint-placebo bandwidths. |
 
 No environment variables or terminal commands are needed to select a
 run mode.
@@ -57,9 +59,12 @@ The two continuous figures present the homogeneous
 \((\tau=0)\) and heterogeneous \((\tau=0.3)\) scenarios separately.
 The gene-expression notebook writes the theoretical inflation curve,
 rejection curves, p-value histogram, and Q-Q tail plot using the paper
-styles. The RD notebook writes the local RD fits, rejection curves,
-theoretical inflation curve, p-value histogram, QQ plot, exact-pool
-comparison, and placebo rejection curves.
+styles. The main RD notebook writes the local RD fits, rejection curves,
+theoretical inflation curve, p-value histogram, Q-Q plot, and exact-pool
+comparison. The RD placebo notebook constructs midpoint placebos between
+adjacent real cutoffs and writes the Town 20787 illustration, rejection
+curves, and p-value histograms across bandwidths. These three selected
+placebo figure sets are retained in the repository as paper artifacts.
 
 ## Python environment
 
@@ -82,4 +87,10 @@ All analyses use seed `0`. The RD analysis uses the legacy
 Each placebo design restarts that same stream.
 
 ## Data and licensing
-See `data/README.md` for provenance and the expected local paths.
+
+Third-party data are not committed. See `data/README.md` for provenance
+and the expected local paths.
+
+## Citation
+
+See `CITATION.cff`.
