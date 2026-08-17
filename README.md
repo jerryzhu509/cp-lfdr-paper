@@ -90,7 +90,3 @@ Each placebo design restarts that same stream.
 
 Third-party data are not committed. See `data/README.md` for provenance
 and the expected local paths.
-
-## Citation
-
-See `CITATION.cff`.
