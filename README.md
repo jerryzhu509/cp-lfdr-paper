@@ -13,6 +13,9 @@ regression-discontinuity analysis.
   RD application.
 - `notebooks/03_regression_discontinuity_placebo.ipynb`: midpoint-placebo
   falsification analysis for the RD application.
+- `notebooks/03_regression_discontinuity_random_tie_sensitivity.ipynb`:
+  compact sensitivity analysis using randomized ranks for tied pooled
+  statistics in the main RD and complete placebo-bandwidth analyses.
 - `src/cp_lfdr/`: shared, tested implementations.
 - `tests/`: unit and regression tests.
 - `data/README.md`: data provenance and local setup.
