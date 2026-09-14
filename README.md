@@ -43,10 +43,7 @@ run mode.
 
 Figures are saved to `results/figures/`. With `SAVE_TEX = True`, the
 notebooks use Matplotlib's PGF backend to write `.tex` files suitable
-for inclusion in LaTeX. A working LaTeX installation is required only
-for this optional export. The curated GitHub copy retains only the 300-dpi
-PNG versions of the paper figures; PDF and `.tex` exports are generated
-locally when requested.
+for inclusion in LaTeX.
 
 A full continuous run (`RUN_FULL = True`) writes:
 
@@ -94,5 +91,4 @@ common block size of 70. Each placebo design restarts the same seed-2
 
 The processed GSE9101 matrix is retained for reproducibility. The much
 larger RD dataset is not committed and must be obtained from the original
-replication package. See `data/README.md` for provenance, setup, and a note
-about confirming the upstream redistribution terms before release.
+replication package. See `data/README.md` for provenance and setup.
