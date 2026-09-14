@@ -1,0 +1,41 @@
+.DS_Store
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Local and third-party data
+data/processed/*
+!data/processed/.gitkeep
+!data/processed/GSE9101_gene_expression_matrix.csv
+data/raw/*
+!data/raw/rd/
+data/raw/rd/*
+!data/raw/rd/.gitkeep
+*.dta
+*.npz
+
+# Generated results
+results/*
+!results/README.md
+!results/continuous_simulations.pkl
+!results/continuous_simulations_summary.csv
+!results/continuous_simulations_100_draws.pkl
+!results/continuous_simulations_100_draws_summary.csv
+!results/figures/
+results/figures/*
+!results/figures/*.png
+
+# LaTeX build products
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
