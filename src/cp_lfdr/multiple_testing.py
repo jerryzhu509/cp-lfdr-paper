@@ -44,8 +44,12 @@ def sl_procedure(p_values, alpha, lmbdas=None):
             rejection_count = 0
         else:
             minimum = np.min(gaps[valid])
-            minimizers = valid[gaps[valid] == minimum]
-            rejection_count = int(minimizers[-1] + 1)
+            # The zero-rejection candidate remains eligible after restriction.
+            if minimum > 0:
+                rejection_count = 0
+            else:
+                minimizers = valid[gaps[valid] == minimum]
+                rejection_count = int(minimizers[-1] + 1)
 
     rejected = order[:rejection_count]
     if lmbdas is not None and rejection_count:

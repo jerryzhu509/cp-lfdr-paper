@@ -24,13 +24,15 @@ data/raw/rd/*
 # Generated results
 results/*
 !results/README.md
-!results/continuous_simulations.pkl
-!results/continuous_simulations_summary.csv
 !results/continuous_simulations_100_draws.pkl
 !results/continuous_simulations_100_draws_summary.csv
+!results/continuous_simulations_10000_draws.pkl
+!results/continuous_simulations_10000_draws_summary.csv
 !results/figures/
 results/figures/*
 !results/figures/*.png
+# Raster fragments used only by local PGF/LaTeX exports.
+results/figures/*-img[0-9]*.png
 
 # LaTeX build products
 *.aux

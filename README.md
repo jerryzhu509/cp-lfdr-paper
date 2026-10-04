@@ -29,7 +29,7 @@ The first code cell in each notebook contains all editable run settings:
 
 | Setting | Notebook | Purpose |
 | --- | --- | --- |
-| `RUN_FULL` | Continuous | `True` runs 20,000 draws per setting; `False` runs the 100-draw preview. |
+| `draws` | Continuous | Defaults to 100 repetitions per setting; change to `10_000` for the full run. |
 | `SAVE_FIGURES` | All | Saves PDF and 300-dpi PNG figures when `True`. |
 | `SAVE_TEX` | All | Also saves PGF-backed `.tex` figures when `True`. |
 | `SAVE_RESULTS` | Continuous | Saves the simulation pickle and summary CSV. |
@@ -45,17 +45,27 @@ Figures are saved to `results/figures/`. With `SAVE_TEX = True`, the
 notebooks use Matplotlib's PGF backend to write `.tex` files suitable
 for inclusion in LaTeX.
 
-A full continuous run (`RUN_FULL = True`) writes:
+The continuous preview (`draws = 100`) writes:
 
 ```text
-results/continuous_simulations.pkl
-results/continuous_simulations_summary.csv
+results/continuous_simulations_100_draws.pkl
+results/continuous_simulations_100_draws_summary.csv
 results/figures/t_test_0.0.pdf
 results/figures/t_test_0.3.pdf
 ```
 
-The two continuous figures present the homogeneous
-\((\tau=0)\) and heterogeneous \((\tau=0.3)\) scenarios separately.
+The continuous simulation uses \(m=2000\), \(n=5\), \(\pi_0=0.99\),
+and \(\alpha=0.1\). The two figures present the homogeneous
+\((\tau=0)\) and heterogeneous \((\tau=0.3)\) scenarios separately, with
+SL/BH rows and bFDR/FDR/power columns. Both procedures use the same data.
+The curves are t-test, density-compound, weighted, and e-weighted; the
+data-driven construction is commented out. Pickle and CSV filenames
+include the repetition count, so a 10,000-draw run preserves the preview
+results while replacing the figures. Each pickle records its run settings.
+The included paper figures and saved notebook plots use 10,000 repetitions
+per setting (seed 2); the notebook defaults to 100 for a quick preview.
+Set `draws = 10_000` to reproduce the paper figures.
+
 The gene-expression notebook writes the theoretical inflation curve,
 rejection curves, p-value histogram, and Q-Q tail plot using the paper
 styles. The main RD notebook writes the local RD fits, rejection curves,

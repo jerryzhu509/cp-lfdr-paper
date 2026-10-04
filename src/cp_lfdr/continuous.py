@@ -3,8 +3,10 @@
 import numpy as np
 from scipy import stats
 from scipy.optimize import brentq
+from scipy.special import ndtr
 
 from .multiple_testing import (
+    bh_procedure,
     compute_FDR,
     compute_alpha_hat_thresholds,
     compute_bFDR,
@@ -96,23 +98,21 @@ def simulate_continuous_data(
 
     p_oracle = np.mean(
         2
-        * stats.norm.cdf(
+        * ndtr(
             -np.abs(sample_means)[None, :]
             / (sigma[:, None] / np.sqrt(sample_size))
         ),
         axis=0,
     )
 
-    p_data = np.mean(
-        1
-        - stats.beta.cdf(
-            sample_means[None, :] ** 2
-            / (sum_squares[:, None] / sample_size),
-            a=0.5,
-            b=(sample_size - 1) / 2,
-        ),
-        axis=0,
-    )
+    # Data-driven construction omitted from this experiment.
+    # p_data = np.mean(
+    #     1 - stats.beta.cdf(
+    #         sample_means[None, :] ** 2
+    #         / (sum_squares[:, None] / sample_size),
+    #         a=0.5, b=(sample_size - 1) / 2,
+    #     ), axis=0,
+    # )
 
     westfall_weights = m * sum_squares / np.sum(sum_squares)
     p_weighted = np.minimum(p_t / westfall_weights, 1)
@@ -131,13 +131,13 @@ def simulate_continuous_data(
         "p_values": {
             "t-test": p_t,
             "Oracle": p_oracle,
-            "Data-driven": p_data,
+            # "Data-driven": p_data,
             "Weighted": p_weighted,
             "E-weighted": p_eweighted,
         },
         "gamma": {
             "Oracle": gamma_oracle,
-            "Data-driven": gamma_data,
+            # "Data-driven": gamma_data,
         },
         "sigma": sigma,
         "sum_squares": sum_squares,
@@ -156,13 +156,22 @@ def run_continuous_setting(
     rng,
     alpha_grid=None,
 ):
-    """Average rejection metrics and theoretical quantities over draws."""
+    """Average paired SL/BH metrics and theoretical quantities over draws.
+
+    ``metrics`` retains the original SL results; ``bh_metrics`` uses the
+    same simulated p-values. The internal key ``Oracle`` is displayed as
+    Density-compound in figures.
+    """
     if alpha_grid is None:
         alpha_grid = np.array([alpha])
 
-    methods = ("t-test", "Oracle", "Data-driven", "Weighted", "E-weighted")
-    compound_methods = ("Oracle", "Data-driven")
+    methods = ("t-test", "Oracle", "Weighted", "E-weighted")  # "Data-driven"
+    compound_methods = ("Oracle",)  # "Data-driven"
     metrics = {
+        name: {"bFDR": 0.0, "FDR": 0.0, "Power": 0.0}
+        for name in methods
+    }
+    bh_metrics = {
         name: {"bFDR": 0.0, "FDR": 0.0, "Power": 0.0}
         for name in methods
     }
@@ -186,10 +195,11 @@ def run_continuous_setting(
         null_indices = simulated["null_indices"]
 
         for name, values in simulated["p_values"].items():
-            rejected, _ = sl_procedure(values, alpha)
-            metrics[name]["bFDR"] += compute_bFDR(rejected, null_indices)
-            metrics[name]["FDR"] += compute_FDR(rejected, null_indices)
-            metrics[name]["Power"] += compute_power(rejected, null_indices, m)
+            for procedure, averages in ((sl_procedure, metrics), (bh_procedure, bh_metrics)):
+                rejected, _ = procedure(values, alpha)
+                averages[name]["bFDR"] += compute_bFDR(rejected, null_indices)
+                averages[name]["FDR"] += compute_FDR(rejected, null_indices)
+                averages[name]["Power"] += compute_power(rejected, null_indices, m)
 
         for level in alpha_grid:
             gamma_oracle, gamma_data = compute_gamma_t_test(
@@ -199,7 +209,7 @@ def run_continuous_setting(
                 float(level),
             )
             gamma_grid["Oracle"][float(level)] += np.max(gamma_oracle)
-            gamma_grid["Data-driven"][float(level)] += np.max(gamma_data)
+            # gamma_grid["Data-driven"][float(level)] += np.max(gamma_data)
 
         for name in compound_methods:
             values = simulated["p_values"][name]
@@ -218,25 +228,21 @@ def run_continuous_setting(
                 gamma_oracle_bh if name == "Oracle" else gamma_data_bh
             )
 
-            gamma_minus_values = np.empty(m)
-            for level in np.unique(alpha_hat_minus):
-                gamma_oracle_level, gamma_data_level = compute_gamma_t_test(
-                    simulated["sigma"],
-                    simulated["sum_squares"],
-                    sample_size,
-                    float(level),
-                )
-                selected = alpha_hat_minus == level
-                gamma_minus_values[selected] = (
-                    gamma_oracle_level[selected]
-                    if name == "Oracle"
-                    else gamma_data_level[selected]
-                )
-            gamma_minus[name] += np.max(gamma_minus_values)
+            # Match the theorem: max_i F_{0,i}(max_j alpha_hat_minus[j]).
+            gamma_oracle_minus, gamma_data_minus = compute_gamma_t_test(
+                simulated["sigma"],
+                simulated["sum_squares"],
+                sample_size,
+                float(np.max(alpha_hat_minus)),
+            )
+            gamma_minus[name] += np.max(
+                gamma_oracle_minus if name == "Oracle" else gamma_data_minus
+            )
 
-    for name in methods:
-        for metric in metrics[name]:
-            metrics[name][metric] /= draws
+    for averages in (metrics, bh_metrics):
+        for name in methods:
+            for metric in averages[name]:
+                averages[name][metric] /= draws
     for name in compound_methods:
         gamma_minus[name] /= draws
         gamma_bh[name] /= draws
@@ -245,6 +251,7 @@ def run_continuous_setting(
 
     return {
         "metrics": metrics,
+        "bh_metrics": bh_metrics,
         "gamma_grid": gamma_grid,
         "gamma_minus": gamma_minus,
         "gamma_bh": gamma_bh,
