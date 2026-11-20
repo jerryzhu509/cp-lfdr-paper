@@ -21,9 +21,7 @@ https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE9101
 The processed matrix is available at:
 https://github.com/wyling01/TwoSampleEPB-Paper/tree/main/Real%20Dataset/GSE9101/GSE9101%20Matrix
 
-The matrix is a processed copy of third-party data. Before public release,
-confirm that the upstream repository and GEO record permit redistribution;
-otherwise remove the CSV and retain these download directions.
+The matrix is a processed copy of third-party data.
 
 ## Regression discontinuity
 
